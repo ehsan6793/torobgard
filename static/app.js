@@ -418,7 +418,7 @@ function drawBase() {
   if (!S.map) return;
   S.base.clearLayers();
   L.marker([S.f.lat, S.f.lon], { icon: L.divIcon({ className: "", html: '<div class="pin me"></div>', iconSize: [20, 20], iconAnchor: [10, 10] }), zIndexOffset: 1000, keyboard: false }).addTo(S.base);
-  if (S.f.radius_km > 0) L.circle([S.f.lat, S.f.lon], { radius: S.f.radius_km * 1000, color: "#0f6b66", weight: 1.5, fillOpacity: 0.05, dashArray: "5 6" }).addTo(S.base);
+  if (S.f.radius_km > 0) L.circle([S.f.lat, S.f.lon], { radius: S.f.radius_km * 1000, color: "#e2231a", weight: 1.5, fillOpacity: 0.05, dashArray: "5 6" }).addTo(S.base);
 }
 function pinFor(o, label) {
   const cls = { open: "open", closing_soon: "soon", closed: "closed", unknown: "unknown" }[o.hours.state];
@@ -603,7 +603,7 @@ function showPlanOnMap(p) {
     pinFor(o, fa(i + 1)).addTo(S.layer).bindTooltip(s.shop.name);
     pts.push([s.shop.lat, s.shop.lon]);
   });
-  L.polyline(pts, { color: "#0f6b66", weight: 5, opacity: 0.85, dashArray: "10 8" }).addTo(S.layer);
+  L.polyline(pts, { color: "#e2231a", weight: 5, opacity: 0.85, dashArray: "10 8" }).addTo(S.layer);
   S.map.fitBounds(pts, { padding: [50, 50], maxZoom: 17 });
 }
 
