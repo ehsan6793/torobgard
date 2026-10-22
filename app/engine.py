@@ -7,6 +7,7 @@ import sqlite3
 import threading
 import zlib
 from datetime import datetime, timedelta
+from pathlib import Path
 
 import numpy as np
 
@@ -70,6 +71,10 @@ def payment_info(payment_json: str | None) -> dict:
 class Engine:
     def __init__(self, db_path: str):
         self.db_path = db_path
+        if not Path(db_path).exists():
+            raise FileNotFoundError(
+                f"دیتابیس پیدا نشد: {db_path} — اول اسکریپت ساخت دیتابیس (build_db.py / 2_build_db.bat) را اجرا کن."
+            )
         self._local = threading.local()
         db = self.conn()
         self.snapshot = datetime.fromisoformat(db.execute("SELECT MAX(changed_at) FROM offers WHERE changed_at LIKE '20%'").fetchone()[0]).astimezone(TEHRAN)
@@ -90,7 +95,10 @@ class Engine:
     def conn(self) -> sqlite3.Connection:
         c = getattr(self._local, "c", None)
         if c is None:
-            c = sqlite3.connect(f"file:{self.db_path}?mode=ro", uri=True, check_same_thread=False)
+            # Path.as_uri() always uses forward slashes, so this works on Windows
+            # (where str(path) gives "C:\...", which is not a valid file: URI) and POSIX alike.
+            uri = Path(self.db_path).resolve().as_uri() + "?mode=ro"
+            c = sqlite3.connect(uri, uri=True, check_same_thread=False)
             c.row_factory = sqlite3.Row
             c.execute("PRAGMA query_only=1")
             c.execute("PRAGMA cache_size=-65536")

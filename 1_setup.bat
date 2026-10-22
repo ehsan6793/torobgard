@@ -1,11 +1,10 @@
 @echo off
-chcp 65001 >nul
 cd /d "%~dp0"
-echo نصب محیط پایتون برای ترب‌گرد...
+echo Setting up Torobgard environment...
 python -m venv .venv
 call .venv\Scripts\activate.bat
-pip install --upgrade pip
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 echo.
-echo تمام شد. حالا 2_build_db.bat را اجرا کن.
+echo Done. Now run 2_build_db.bat
 pause
